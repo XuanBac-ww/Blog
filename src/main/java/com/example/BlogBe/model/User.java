@@ -1,6 +1,5 @@
 package com.example.BlogBe.model;
 
-import com.example.BlogBe.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
@@ -22,16 +22,26 @@ public class User {
     private String email;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role roles;
+    @ManyToMany(fetch = FetchType.EAGER, cascade =
+            {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id",
+                    referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id",
+                    referencedColumnName = "id")
+    )
+    private Collection<Role> roles = new HashSet<>();
 
-
-    public User(Long id, String username, String email, String password, Role roles) {
+    public User(Long id, String username, String email, String password, Collection<Role> roles) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.roles = roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
 
@@ -70,12 +80,8 @@ public class User {
         this.password = password;
     }
 
-    public Role getRoles() {
+
+    public Collection<Role> getRoles() {
         return roles;
     }
-
-    public void setRoles(Role roles) {
-        this.roles = roles;
-    }
-
 }

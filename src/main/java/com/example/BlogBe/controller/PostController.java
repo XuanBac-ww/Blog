@@ -40,7 +40,7 @@ public class PostController {
         return ResponseEntity.ok(new ApiResponse("success",posts));
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<ApiResponse> updatePost(@RequestBody UpdatePostRequest request) {
         Post updatedPost = postService.updatePost(request);
         return ResponseEntity.ok(new ApiResponse("sucess", updatedPost));
