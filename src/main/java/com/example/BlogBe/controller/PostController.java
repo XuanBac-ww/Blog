@@ -8,6 +8,7 @@ import com.example.BlogBe.response.ApiResponse;
 import com.example.BlogBe.service.Post.PostServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class PostController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> createPost(@RequestBody CreatePostRequest request) {
             Post createdPost = postService.addPost(request);
             return ResponseEntity.ok(new ApiResponse("Created Successfully", createdPost));
@@ -41,12 +43,14 @@ public class PostController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> updatePost(@RequestBody UpdatePostRequest request) {
         Post updatedPost = postService.updatePost(request);
         return ResponseEntity.ok(new ApiResponse("sucess", updatedPost));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         try {
             postService.deletePostById(id);

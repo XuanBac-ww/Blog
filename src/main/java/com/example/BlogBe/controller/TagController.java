@@ -7,6 +7,7 @@ import com.example.BlogBe.service.Tag.ITagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,6 +51,7 @@ public class TagController {
     // ========== ADMIN ONLY ENDPOINTS ==========
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> createTag(@RequestBody TagDto tagDto) {
         Tag tag = tagService.createTag(tagDto);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -57,12 +59,14 @@ public class TagController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> updateTag(@PathVariable Long id, @RequestBody TagDto tagDto) {
         TagDto updatedTag = tagService.updateTag(id, tagDto);
         return ResponseEntity.ok(new ApiResponse("Tag updated successfully", updatedTag));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
         return ResponseEntity.ok(new ApiResponse("Tag deleted successfully", null));

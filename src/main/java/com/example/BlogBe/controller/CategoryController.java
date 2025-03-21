@@ -6,6 +6,7 @@ import com.example.BlogBe.response.ApiResponse;
 import com.example.BlogBe.service.Category.CategoryServiceImpl;
 import lombok.Builder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,18 +35,21 @@ public class CategoryController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> createCategory(@RequestBody CategoryDto categoryDto) {
         Category category = categoryServiceImpl.createCategory(categoryDto);
         return ResponseEntity.ok(new ApiResponse("Category added successfully", category));
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id,@RequestBody CategoryDto categoryDto) {
         CategoryDto updatedCategory = categoryServiceImpl.updateCategory(id,categoryDto);
         return ResponseEntity.ok(new ApiResponse("Category updated successfully", updatedCategory));
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long id) {
         categoryServiceImpl.deleteCategory(id);
         return ResponseEntity.ok(new ApiResponse("Category deleted successfully",null));
